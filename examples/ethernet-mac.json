@@ -1,0 +1,33 @@
+{
+  "sensorName": "Example Ethernet MAC",
+  "modelClassName": "ExampleEthernetMac",
+  "bus": "ethernet",
+  "endianness": "little",
+  "registerAddressWidth": 32,
+  "dataWidth": 32,
+  "ethernet": {
+    "macAddress": "02:00:00:00:00:01",
+    "phyInterface": "rgmii",
+    "supportedSpeedsMbps": [10, 100, 1000],
+    "duplex": "both",
+    "mtu": 1500,
+    "rxQueueCount": 2,
+    "txQueueCount": 2,
+    "checksumOffload": true,
+    "vlanSupported": true,
+    "promiscuousModeSupported": true,
+    "linkUpAtReset": true
+  },
+  "blockDiagramAnalysis": "Ethernet MAC register bank connected to RX/TX descriptor engines, frame filtering, checksum logic, PHY link state, and interrupt aggregation.",
+  "memoryMapAnalysis": "32-bit control/status registers with MAC control at 0x00, link status at 0x04, interrupt status at 0x08, and version at 0xFC.",
+  "registers": [
+    { "name": "MAC_CONTROL", "offset": "0x00", "width": 32, "access": "rw", "resetValue": 0, "fields": [{ "name": "RX_ENABLE", "lsb": 0, "width": 1, "access": "rw" }, { "name": "TX_ENABLE", "lsb": 1, "width": 1, "access": "rw" }] },
+    { "name": "LINK_STATUS", "offset": "0x04", "width": 32, "access": "ro", "resetValue": 1, "fields": [{ "name": "LINK_UP", "lsb": 0, "width": 1, "access": "ro" }] },
+    { "name": "INT_STATUS", "offset": "0x08", "width": 32, "access": "w1c", "resetValue": 0, "fields": [{ "name": "RX_COMPLETE", "lsb": 0, "width": 1, "access": "w1c" }, { "name": "TX_COMPLETE", "lsb": 1, "width": 1, "access": "w1c" }] },
+    { "name": "VERSION", "offset": "0xFC", "width": 32, "access": "ro", "resetValue": "0x00010000", "fields": [] }
+  ],
+  "interrupts": [{ "name": "IRQ", "source": "INT_STATUS", "polarity": "active-high", "behavior": "level" }],
+  "timingNotes": [],
+  "behavioralNotes": ["RX and TX completion update status and interrupt state."],
+  "referenceModelHints": ["Ethernet", "MAC", "network backend", "PHY"]
+}

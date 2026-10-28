@@ -1,0 +1,33 @@
+node_modules/
+.mastra/
+.env
+.DS_Store
+*.dSYM/
+generated-sensor-spec.json
+
+# Build artifacts produced by building a generated sensor/actuator model,
+# via either its Makefile or its CMakeLists.txt path: object/library files,
+# CMake's own output, and the compiled test/adapter executables (which have
+# no distinguishing extension, so they are excluded by denying everything
+# under each generated model folder except known agent-authored source,
+# docs, and build config). See each model's own `clean` target for the
+# authoritative list of what a build produces in-place.
+sensor-models/**/build/
+sensor-models/**/CMakeFiles/
+sensor-models/**/CMakeCache.txt
+sensor-models/**/cmake_install.cmake
+sensor-models/**/CTestTestfile.cmake
+sensor-models/**/Testing/
+sensor-models/**
+!sensor-models/**/
+!sensor-models/**/*.c
+!sensor-models/**/*.h
+!sensor-models/**/*.hpp
+!sensor-models/**/*.md
+!sensor-models/**/*.json
+!sensor-models/**/Makefile
+!sensor-models/**/CMakeLists.txt
+# The directory-allow rule above (needed so git can recurse to apply the
+# file-level allows) also un-ignores .dSYM bundles, since those are
+# directories too. Re-exclude them last so this wins.
+sensor-models/**/*.dSYM/

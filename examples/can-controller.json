@@ -1,0 +1,32 @@
+{
+  "sensorName": "Example CAN FD Controller",
+  "modelClassName": "ExampleCanFdController",
+  "bus": "can",
+  "endianness": "little",
+  "registerAddressWidth": 32,
+  "dataWidth": 32,
+  "can": {
+    "protocol": "can-fd",
+    "nominalBitrate": 500000,
+    "dataBitrate": 2000000,
+    "loopbackSupported": true,
+    "listenOnlySupported": true,
+    "rxFifoDepth": 32,
+    "txMailboxCount": 8,
+    "filters": [
+      { "id": "0x123", "mask": "0x7FF", "extended": false, "destination": "RX_FIFO0" }
+    ]
+  },
+  "blockDiagramAnalysis": "CAN protocol engine connected to RX FIFO, TX mailboxes, acceptance filters, status logic, and interrupt output.",
+  "memoryMapAnalysis": "32-bit MMIO register bank with control at 0x00, status at 0x04, interrupt status at 0x08, and identity at 0xFC.",
+  "registers": [
+    { "name": "CONTROL", "offset": "0x00", "width": 32, "access": "rw", "resetValue": 0, "fields": [{ "name": "ENABLE", "lsb": 0, "width": 1, "access": "rw" }] },
+    { "name": "STATUS", "offset": "0x04", "width": 32, "access": "ro", "resetValue": 0, "fields": [{ "name": "RX_PENDING", "lsb": 0, "width": 1, "access": "ro" }] },
+    { "name": "INT_STATUS", "offset": "0x08", "width": 32, "access": "w1c", "resetValue": 0, "fields": [{ "name": "RX_INT", "lsb": 0, "width": 1, "access": "w1c" }] },
+    { "name": "DEVICE_ID", "offset": "0xFC", "width": 32, "access": "ro", "resetValue": "0x43414E46", "fields": [] }
+  ],
+  "interrupts": [{ "name": "IRQ", "source": "INT_STATUS", "polarity": "active-high", "behavior": "level" }],
+  "timingNotes": [],
+  "behavioralNotes": ["Receiving an accepted frame sets RX_PENDING and RX_INT."],
+  "referenceModelHints": ["CAN", "CAN FD", "mailbox", "frame backend"]
+}

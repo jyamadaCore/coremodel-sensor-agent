@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.16)
+project(adxl345_coremodel_model C)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+add_library(adxl345_model STATIC adxl345_model.c adxl345_model.h)
+target_include_directories(adxl345_model PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+  target_compile_options(adxl345_model PRIVATE -Wall -Wextra -Werror)
+endif()
+add_executable(adxl345-test tests/test_adxl345.c)
+target_link_libraries(adxl345-test PRIVATE adxl345_model)
+if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+  target_compile_options(adxl345-test PRIVATE -Wall -Wextra -Werror)
+endif()
+enable_testing()
+add_test(NAME adxl345-test COMMAND adxl345-test)
+if(DEFINED COREMODEL_DIR)
+  add_executable(adxl345-coremodel adxl345_coremodel.c ${COREMODEL_DIR}/coremodel.c)
+  target_include_directories(adxl345-coremodel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${COREMODEL_DIR})
+  target_link_libraries(adxl345-coremodel PRIVATE pthread adxl345_model)
+  # Do not compile the upstream inspected CoreModel implementation with this
+  # generated model's -Werror policy; the local library intentionally uses C
+  # extensions (e.g. zero-length arrays) and is treated as authoritative, not
+  # something this project corrects.
+  if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+    set_source_files_properties(adxl345_coremodel.c PROPERTIES COMPILE_OPTIONS "-Wall;-Wextra;-Werror")
+  endif()
+endif()

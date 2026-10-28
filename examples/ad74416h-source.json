@@ -1,0 +1,10 @@
+{
+  "sensorName": "AD74416H",
+  "modelClassName": "AD74416HModel",
+  "busHint": "spi",
+  "chipSelect": 0,
+  "datasheetPath": "/Users/jasonyamada/Downloads/ad74416h.pdf",
+  "pageRanges": ["1", "20-24", "34-72", "75-105"],
+  "includeFullRegisterMap": true,
+  "additionalInstructions": "Expand channel-indexed registers A through D when the register map provides deterministic offsets. Capture SPI CRC and framing behavior, ADC/DAC behavior, HART registers, GPIO behavior, alerts, watchdog, and reset semantics."
+}

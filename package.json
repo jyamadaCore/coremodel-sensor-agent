@@ -1,0 +1,24 @@
+{
+  "name": "coremodel-sensor-agent",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "mastra dev",
+    "typecheck": "tsc --noEmit",
+    "run:example": "tsx --env-file-if-exists=.env examples/run.ts",
+    "run:generate-spec": "tsx --env-file-if-exists=.env examples/generate-spec.ts",
+    "build": "tsx --env-file-if-exists=.env examples/build.ts",
+    "verify:layout": "node scripts/verify-layout.mjs"
+  },
+  "dependencies": {
+    "@mastra/core": "latest",
+    "mastra": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}

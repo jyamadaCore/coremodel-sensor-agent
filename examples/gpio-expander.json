@@ -1,0 +1,28 @@
+{
+  "sensorName": "Example 8-bit GPIO Expander",
+  "modelClassName": "ExampleGpioExpander",
+  "bus": "gpio",
+  "endianness": "little",
+  "registerAddressWidth": 8,
+  "dataWidth": 8,
+  "gpio": {
+    "debounceMicroseconds": 100,
+    "pins": [
+      { "pin": 0, "name": "GPIO0", "direction": "bidirectional", "resetLevel": "high-z", "activeLevel": "active-high", "pull": "up", "drive": "open-drain", "interrupt": "both" },
+      { "pin": 1, "name": "GPIO1", "direction": "output", "resetLevel": "low", "activeLevel": "active-high", "pull": "none", "drive": "push-pull", "interrupt": "none" }
+    ]
+  },
+  "blockDiagramAnalysis": "Register bank controls GPIO direction and output latch; synchronized input sampler feeds edge detection and interrupt status.",
+  "memoryMapAnalysis": "8-bit registers: INPUT 0x00, OUTPUT 0x01, DIRECTION 0x02, INT_STATUS 0x03, DEVICE_ID 0x0F.",
+  "registers": [
+    { "name": "INPUT", "offset": "0x00", "width": 8, "access": "ro", "resetValue": 0, "fields": [] },
+    { "name": "OUTPUT", "offset": "0x01", "width": 8, "access": "rw", "resetValue": 0, "fields": [] },
+    { "name": "DIRECTION", "offset": "0x02", "width": 8, "access": "rw", "resetValue": "0x01", "fields": [] },
+    { "name": "INT_STATUS", "offset": "0x03", "width": 8, "access": "w1c", "resetValue": 0, "fields": [] },
+    { "name": "DEVICE_ID", "offset": "0x0F", "width": 8, "access": "ro", "resetValue": "0x47", "fields": [] }
+  ],
+  "interrupts": [{ "name": "IRQ", "source": "INT_STATUS", "polarity": "active-low", "behavior": "level" }],
+  "timingNotes": ["Input transitions are debounced for 100 microseconds."],
+  "behavioralNotes": [],
+  "referenceModelHints": ["GPIO", "digital line", "edge interrupt"]
+}

@@ -1,0 +1,69 @@
+{
+  "sensorName": "Example SPI Single-Channel DAC Actuator",
+  "modelClassName": "ExampleSpiDacActuator",
+  "peripheralKind": "actuator",
+  "bus": "spi",
+  "chipSelect": 1,
+  "endianness": "little",
+  "registerAddressWidth": 8,
+  "dataWidth": 16,
+  "blockDiagramAnalysis": "SPI register interface feeds a control register and a 12-bit DAC code register into a single-channel output driver; a status register reports busy/over-range; a device ID register identifies the part.",
+  "memoryMapAnalysis": "8-bit register addresses, 16-bit register data. CTRL at 0x00 holds ENABLE and RANGE_SEL. DAC_CODE at 0x01 holds a right-justified 12-bit code in bits 0:11; bits 12:15 are reserved. STATUS at 0x02 is read-only with BUSY and OVERRANGE flags. DEVICE_ID at 0x0F is a fixed identity value.",
+  "registers": [
+    {
+      "name": "CTRL",
+      "offset": "0x00",
+      "width": 16,
+      "access": "rw",
+      "resetValue": "0x0000",
+      "description": "Output enable and voltage range select.",
+      "fields": [
+        { "name": "ENABLE", "lsb": 0, "width": 1, "access": "rw", "description": "1 = DAC output driver active; 0 = output held high-impedance.", "resetValue": 0 },
+        { "name": "RANGE_SEL", "lsb": 1, "width": 1, "access": "rw", "description": "0 = 0-2.5V output range, 1 = 0-5V output range.", "resetValue": 0 }
+      ]
+    },
+    {
+      "name": "DAC_CODE",
+      "offset": "0x01",
+      "width": 16,
+      "access": "rw",
+      "resetValue": "0x0000",
+      "description": "Right-justified 12-bit DAC code commanding the output level.",
+      "writeSideEffect": "Updates the commanded analog output level when ENABLE is set; the new code is observable through the model's output getter.",
+      "fields": [
+        { "name": "CODE", "lsb": 0, "width": 12, "access": "rw", "description": "12-bit DAC code, 0x000 = output low rail, 0xFFF = output full-scale.", "resetValue": 0 }
+      ]
+    },
+    {
+      "name": "STATUS",
+      "offset": "0x02",
+      "width": 16,
+      "access": "ro",
+      "resetValue": "0x0000",
+      "description": "Live output driver status.",
+      "fields": [
+        { "name": "BUSY", "lsb": 0, "width": 1, "access": "ro", "description": "1 while the output driver is still settling to a newly written code.", "resetValue": 0 },
+        { "name": "OVERRANGE", "lsb": 1, "width": 1, "access": "ro", "description": "1 if a commanded code is out of range for the selected RANGE_SEL.", "resetValue": 0 }
+      ]
+    },
+    {
+      "name": "DEVICE_ID",
+      "offset": "0x0F",
+      "width": 16,
+      "access": "ro",
+      "resetValue": "0x5AC1",
+      "description": "Fixed device identity value.",
+      "fields": []
+    }
+  ],
+  "interrupts": [],
+  "timingNotes": [
+    "The model should resolve BUSY synchronously (treat the settling time as instantaneous for simulation purposes) since no settling-time value is specified.",
+    "A DAC_CODE write while ENABLE is clear still updates CODE and the output getter, but the commanded level is not considered driven onto the physical output until ENABLE is set."
+  ],
+  "behavioralNotes": [
+    "This is a synthetic example actuator, not a real silicon part; evidence for the generated CoreModel binding must still come from the configured CoreModel library's SPI examples.",
+    "Expose the commanded output through a getter (e.g. get_output_code()/get_output_enabled()) so a host harness can observe what the device was told to drive, matching the sensor pattern of a setter used to inject input."
+  ],
+  "referenceModelHints": ["SPI register peripheral", "single-channel DAC", "actuator output device"]
+}

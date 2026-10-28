@@ -1,0 +1,17 @@
+{
+  "name": "BME280",
+  "modelClassName": "BME280Model",
+  "bus": "i2c",
+  "address": "0x76",
+  "generatedFiles": [
+    "src/bme280_model.h",
+    "src/bme280_model.c",
+    "src/bme280_coremodel_main.c",
+    "tests/test_bme280.c",
+    "Makefile",
+    "CMakeLists.txt",
+    "README.md",
+    "GENERATION_REPORT.md",
+    "sensor-model.json"
+  ]
+}
